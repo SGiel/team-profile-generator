@@ -1,6 +1,74 @@
-module.exports = templateData => {
-    // destructure page data by section
-    // const { projects, about, ...header } = templateData;
+const generateManagerCard = (managerArr) => {
+    return managerArr.map((manager) => {
+        return `
+        <div class="card m-3" style="width: 20rem;">
+            <div class="card-header text-white bg-primary">
+                <h5 class="card-title">${manager.name}</h5>
+                <h6 class="card-subtitle mb-2 text-light"><i class="fas fa-mug-hot"></i>Manager</h6>
+            </div> 
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">ID: ${manager.id}</li>
+                <li class="list-group-item">Email: <a href="mailto: ${manager.email}" class="card-link">${manager.email}</a></li>
+                <li class="list-group-item">Office number: ${manager.officeNumber}</li>
+            </ul>
+        </div>
+        `
+    });
+}
+const generateEngineerCards = (engineerArr) => {
+    if (!engineerArr) {
+        return '';
+      }
+    return engineerArr.map((engineer) => {
+        return `
+        <div class="card m-3" style="width: 20rem;">
+            <div class="card-header text-white bg-primary">
+                <h5 class="card-title">${engineer.name}</h5>
+                <h6 class="card-subtitle mb-2 text-light"><i class="fas fa-glasses"></i> Engineer</h6>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">ID: ${engineer.id}</li>
+                <li class="list-group-item">Email: <a href="mailto: ${engineer.email}" class="card-link">${engineer.email}</a></li>
+                <li class="list-group-item">GitHub: <a href="https://github.com/${engineer.github}" class="card-link">${engineer.github}</a></li>
+            </ul>
+        </div>
+        `
+    }).join('');
+}
+const generateInternCards = (internArr) => {
+    if (!internArr) {
+        return '';
+      }
+    return internArr.map((intern) => {
+        return `
+        <div class="card m-3" style="width: 20rem;">
+            <div class="card-header text-white bg-primary">
+                <h5 class="card-title">${intern.name}</h5>
+                <h6 class="card-subtitle mb-2 text-light"><i class="fas fa-user-graduate"></i> Intern</h6>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">ID: ${intern.id}</li>
+                <li class="list-group-item">Email: <a href="mailto: ${intern.email}" class="card-link">${intern.email}</a></li>
+                <li class="list-group-item">School:${intern.school}</li>
+            </ul>
+        </div>
+        `
+    }).join('');
+}
+
+
+module.exports = (teamData) => {
+    console.log(teamData);
+    const managerArr = teamData.filter(manager => {
+        return manager.officeNumber;
+    })
+
+    const engineerArr = teamData.filter(engineer => {
+        return engineer.github;
+    })
+    const internArr = teamData.filter(intern => {
+        return intern.school;
+    })
   
     return `
     <!DOCTYPE html>
@@ -21,11 +89,18 @@ module.exports = templateData => {
   
     <body>
       <header>
-        <div class="container flex-row justify-space-between align-center py-3">
-          <h1 class="page-title text-secondary bg-dark py-2 px-3">My Team</h1>
+        <div>
+          <h1>My Team</h1>
         </div>
       </header>
-      <main class="container my-5">
+      <main>
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                ${generateManagerCard(managerArr)}
+                ${generateEngineerCards(engineerArr)}
+                ${generateInternCards(internArr)}
+            </div>
+        </div>
       </main>
       <!-- for bootstrap -->
       <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

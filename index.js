@@ -1,9 +1,9 @@
 const fs = require('fs');
 const inquirer = require('inquirer');
+const Manager = require('./lib/Manager')
+const Engineer = require('./lib/Engineer')
+const Intern = require('./lib/Intern')
 const generateHTML = require('./src/generateHTML');
-
-const employeeQuestions = [
-];
 
 const managerQuestions = [
     {
@@ -23,7 +23,7 @@ const managerQuestions = [
     },
     {
         type: 'input',
-        name: 'office_number',
+        name: 'officeNumber',
         message: 'Office number:',
     }
 ];
@@ -31,9 +31,9 @@ const managerQuestions = [
 const buildTeamQuestion = [
     {
         type: 'list',
-        name: 'team_member',
+        name: 'teamMember',
         message: 'Additions to the team:',
-        default: 'I am finished building this team.',
+        // default: 'I am finished building this team.',
         choices: ['Engineer', 'Intern', 'I am finished building this team.'],
     }
 ]
@@ -89,8 +89,13 @@ const internQuestions = [
 // };
 
 const promptManager = () => {
-    return inquirer.prompt(managerQuestions);
-}
+    return inquirer.prompt(managerQuestions)
+    .then(managerAnswers => {
+        const team = [];
+        team.push(new Manager(`${managerAnswers.name}`, `${managerAnswers.id}`, `${managerAnswers.email}`, `${managerAnswers.officeNumber}`));
+        return team;
+    })
+};
 
 const promptBuildTeam= () => {
     return inquirer.prompt(buildTeamQuestion);
@@ -104,27 +109,29 @@ const promptIntern = () => {
     return inquirer.prompt(internQuestions);
 }
 
-const buildTeam = (answers) => {
-    // Need to put employee objects in team array here!
-    // team = [];
-    // team.push(answers);
-    // console.log("team ", team);
-    promptBuildTeam()
+const buildTeam = (team) => {
+    // console.log(team);
+    return inquirer.prompt(buildTeamQuestion)
+    // promptBuildTeam()
     .then(answer => { 
-        if (`${answer.team_member}` === "Engineer") {
-            promptEngineer()
+        if (`${answer.teamMember}` === "Engineer") {
+            return inquirer.prompt(engineerQuestions)
+            // promptEngineer()
                 .then(EngineerAnswers => {
-                    buildTeam(EngineerAnswers)
+                    team.push(new Engineer(`${EngineerAnswers.name}`, `${EngineerAnswers.id}`, `${EngineerAnswers.email}`, `${EngineerAnswers.github}`));
+                    return buildTeam(team)
                 })
-        } else if (`${answer.team_member}` === "Intern") {
-            promptIntern()
+        } else if (`${answer.teamMember}` === "Intern") {
+            return inquirer.prompt(internQuestions)
+            // promptIntern()
                 .then(InternAnswers => {
-                    buildTeam(InternAnswers)
+                    team.push(new Intern(`${InternAnswers.name}`, `${InternAnswers.id}`, `${InternAnswers.email}`, `${InternAnswers.school}`));
+                    return buildTeam(team)
                 })
-        } else if (`${answer.team_member}` === "I am finished building this team.") return;
+        } else return team;
+        // } else if (`${answer.teamMember}` === "I am finished building this team.") return team;
     })
-
-}
+};
 
 const writeFile = (fileName, fileContent) => {
     return new Promise((resolve, reject) => {
@@ -145,13 +152,18 @@ const writeFile = (fileName, fileContent) => {
     });
 };
 
+
+
 promptManager()
-    .then(managerAnswers => {
-        buildTeam(managerAnswers)
+    .then(team => {
+        return buildTeam(team);
     })
-    // .then(pageContent => {
-    //     return writeFile('/dist/index.html', pageContent);
-    //   })
-    // .catch(err => {
-    //     console.log(err);
-    // });
+    .then(fullTeam => {
+        return generateHTML(fullTeam);
+    })
+    .then(pageContent => {
+        return writeFile('./dist/index.html', pageContent);
+    })
+    .catch(err => {
+        console.log(err);
+    });
