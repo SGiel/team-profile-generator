@@ -29,7 +29,7 @@ const generateEngineerCards = (engineerArr) => {
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">ID: ${engineer.id}</li>
                 <li class="list-group-item">Email: <a href="mailto: ${engineer.email}" class="card-link">${engineer.email}</a></li>
-                <li class="list-group-item">GitHub: <a href="https://github.com/${engineer.github}" class="card-link">${engineer.github}</a></li>
+                <li class="list-group-item">GitHub: <a href="https://github.com/${engineer.github}" target="_blank" class="card-link">${engineer.github}</a></li>
             </ul>
         </div>
         `
