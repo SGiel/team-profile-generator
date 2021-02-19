@@ -3,7 +3,7 @@ const generateManagerCard = (managerArr) => {
         return `
         <div class="card m-3" style="width: 20rem;">
             <div class="card-header text-white bg-primary">
-                <h5 class="card-title">${manager.name}</h5>
+                <h5 class="card-title">${manager.employeeName}</h5>
                 <h6 class="card-subtitle mb-2 text-light"><i class="fas fa-mug-hot"></i>Manager</h6>
             </div> 
             <ul class="list-group list-group-flush">
@@ -23,7 +23,7 @@ const generateEngineerCards = (engineerArr) => {
         return `
         <div class="card m-3" style="width: 20rem;">
             <div class="card-header text-white bg-primary">
-                <h5 class="card-title">${engineer.name}</h5>
+                <h5 class="card-title">${engineer.employeeName}</h5>
                 <h6 class="card-subtitle mb-2 text-light"><i class="fas fa-glasses"></i> Engineer</h6>
             </div>
             <ul class="list-group list-group-flush">
@@ -43,7 +43,7 @@ const generateInternCards = (internArr) => {
         return `
         <div class="card m-3" style="width: 20rem;">
             <div class="card-header text-white bg-primary">
-                <h5 class="card-title">${intern.name}</h5>
+                <h5 class="card-title">${intern.employeeName}</h5>
                 <h6 class="card-subtitle mb-2 text-light"><i class="fas fa-user-graduate"></i> Intern</h6>
             </div>
             <ul class="list-group list-group-flush">
@@ -58,16 +58,16 @@ const generateInternCards = (internArr) => {
 
 
 module.exports = (teamData) => {
-    console.log(teamData);
+    
     const managerArr = teamData.filter(manager => {
-        return manager.officeNumber;
+        return manager.constructor.name == "Manager";
     })
 
     const engineerArr = teamData.filter(engineer => {
-        return engineer.github;
+        return engineer.constructor.name == "Engineer";
     })
     const internArr = teamData.filter(intern => {
-        return intern.school;
+        return intern.constructor.name == "Intern";
     })
   
     return `

@@ -8,23 +8,54 @@ const generateHTML = require('./src/generateHTML');
 const managerQuestions = [
     {
         type: 'input',
-        name: 'name',
+        name: 'employeeName',
         message: 'Team Manager name:',
+        validate: nameInput => {
+            if (nameInput) {
+              return true;
+            } else {
+              console.log("Please enter the Manager's name");
+              return false;
+            }
+        },
     },
     {
         type: 'input',
         name: 'id',
         message: 'ID #:',
+        validate: idInput => {
+            if (idInput.match(/^[0-9]+$/) && idInput.length > 0) {
+                return true;
+            } else {
+                console.log("Invalid entry. Please enter a number.");
+                return false;
+            }
+        },
     },
     {
         type: 'input',
         name: 'email',
         message: 'Email address:',
+        validate: emailInput => {
+            if (!(emailInput == '' || emailInput.indexOf('@') == -1 || emailInput.indexOf('.') == -1)) {
+                return true;
+            } else {
+                console.log("Invalid entry. Please enter an email address.")
+            }
+        }
     },
     {
         type: 'input',
         name: 'officeNumber',
         message: 'Office number:',
+        validate: officeNumberInput => {
+            if (officeNumberInput.match(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/)) {
+                return true;
+            } else {
+                console.log("Invalid entry. Please enter an email address.")
+            }
+        }
+
     }
 ];
 
@@ -41,18 +72,41 @@ const buildTeamQuestion = [
 const engineerQuestions = [
     {
         type: 'input',
-        name: 'name',
+        name: 'employeeName',
         message: 'Engineer name:',
+        validate: nameInput => {
+            if (nameInput) {
+              return true;
+            } else {
+              console.log("Please enter the Engineer's name");
+              return false;
+            }
+        },
     },
     {
         type: 'input',
         name: 'id',
         message: 'ID #:',
+        validate: idInput => {
+            if (idInput.match(/^[0-9]+$/) && idInput.length > 0) {
+                return true;
+            } else {
+                console.log("Invalid entry. Please enter a number.");
+                return false;
+            }
+        }
     },
     {
         type: 'input',
         name: 'email',
         message: 'Email address:',
+        validate: emailInput => {
+            if (!(emailInput == '' || emailInput.indexOf('@') == -1 || emailInput.indexOf('.') == -1)) {
+                return true;
+            } else {
+                console.log("Invalid entry. Please enter an email address.")
+            }
+        }
     },
     {
         type: 'input',
@@ -64,18 +118,41 @@ const engineerQuestions = [
 const internQuestions = [
     {
         type: 'input',
-        name: 'name',
+        name: 'employeeName',
         message: 'Intern name:',
+        validate: nameInput => {
+            if (nameInput) {
+              return true;
+            } else {
+              console.log("Please enter the Intern's name");
+              return false;
+            }
+        },
     },
     {
         type: 'input',
         name: 'id',
         message: 'ID #:',
+        validate: idInput => {
+            if (idInput.match(/^[0-9]+$/) && idInput.length > 0) {
+                return true;
+            } else {
+                console.log("Invalid entry. Please enter a number.");
+                return false;
+            }
+        }
     },
     {
         type: 'input',
         name: 'email',
         message: 'Email address:',
+        validate: emailInput => {
+            if (!(emailInput == '' || emailInput.indexOf('@') == -1 || emailInput.indexOf('.') == -1)) {
+                return true;
+            } else {
+                console.log("Invalid entry. Please enter an email address.")
+            }
+        }
     },
     {
         type: 'input',
@@ -84,52 +161,46 @@ const internQuestions = [
     }
 ];
 
-// const promptEmployee = () => {
-//     return inquirer.prompt(employeeQuestions);
-// };
-
 const promptManager = () => {
     return inquirer.prompt(managerQuestions)
     .then(managerAnswers => {
         const team = [];
-        team.push(new Manager(`${managerAnswers.name}`, `${managerAnswers.id}`, `${managerAnswers.email}`, `${managerAnswers.officeNumber}`));
+        team.push(new Manager(`${managerAnswers.employeeName}`, `${managerAnswers.id}`, `${managerAnswers.email}`, `${managerAnswers.officeNumber}`));
         return team;
     })
 };
 
 const promptBuildTeam= () => {
-    return inquirer.prompt(buildTeamQuestion);
+    return inquirer.prompt(buildTeamQuestion)
 }
 
 const promptEngineer = () => {
-    return inquirer.prompt(engineerQuestions);
+    return inquirer.prompt(engineerQuestions)
 }
 
 const promptIntern = () => {
-    return inquirer.prompt(internQuestions);
+    return inquirer.prompt(internQuestions)
 }
 
 const buildTeam = (team) => {
-    // console.log(team);
     return inquirer.prompt(buildTeamQuestion)
-    // promptBuildTeam()
+    //promptBuildTeam()
     .then(answer => { 
         if (`${answer.teamMember}` === "Engineer") {
             return inquirer.prompt(engineerQuestions)
-            // promptEngineer()
+            //promptEngineer()
                 .then(EngineerAnswers => {
-                    team.push(new Engineer(`${EngineerAnswers.name}`, `${EngineerAnswers.id}`, `${EngineerAnswers.email}`, `${EngineerAnswers.github}`));
+                    team.push(new Engineer(`${EngineerAnswers.employeeName}`, `${EngineerAnswers.id}`, `${EngineerAnswers.email}`, `${EngineerAnswers.github}`));
                     return buildTeam(team)
                 })
         } else if (`${answer.teamMember}` === "Intern") {
             return inquirer.prompt(internQuestions)
-            // promptIntern()
+            //promptIntern()
                 .then(InternAnswers => {
-                    team.push(new Intern(`${InternAnswers.name}`, `${InternAnswers.id}`, `${InternAnswers.email}`, `${InternAnswers.school}`));
+                    team.push(new Intern(`${InternAnswers.employeeName}`, `${InternAnswers.id}`, `${InternAnswers.email}`, `${InternAnswers.school}`));
                     return buildTeam(team)
                 })
         } else return team;
-        // } else if (`${answer.teamMember}` === "I am finished building this team.") return team;
     })
 };
 
